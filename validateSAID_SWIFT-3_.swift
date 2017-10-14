@@ -1,6 +1,3 @@
-//: Playground - noun: a place where people can play
-
-import UIKit
 import Foundation
 
 
@@ -44,34 +41,20 @@ public struct ValidateSAID {
         }
         
         
-        let reduced = idString.enumerated().reduce(0) { (sum, item) -> Int in
+        let sum = idString.enumerated().reduce(0) { (sum, item) -> Int in
             let i = item.offset
-            var sum1 = sum
+            var sumTemp = sum
             if (i % 2 == 0) {
-                //print("\n\n \(#function), \(#line) value: \(idString.charAt(at: i))")
                 let ZFOdd = String(format: "%02d", Int(String(idString.charAt(at: i)))! * 2)
-                sum1 += Int(String(ZFOdd.charAt(at: 0)))! + Int(String(ZFOdd.charAt(at: 1)))!
+                sumTemp += Int(String(ZFOdd.charAt(at: 0)))! + Int(String(ZFOdd.charAt(at: 1)))!
             } else {
-                sum1 += Int(String(idString.charAt(at: i)))!
+                sumTemp += Int(String(idString.charAt(at: i)))!
             }
-            return sum1
+            return sumTemp
         }
         
-        var sum1 = 0
-        for i in 0...idString.count-1 {
-            if (i % 2 == 0) {
-                //print("\n\n \(#function), \(#line) value: \(idString.charAt(at: i))")
-                let ZFOdd = String(format: "%02d", Int(String(idString.charAt(at: i)))! * 2)
-                sum1 += Int(String(ZFOdd.charAt(at: 0)))! + Int(String(ZFOdd.charAt(at: 1)))!
-            } else {
-                sum1 += Int(String(idString.charAt(at: i)))!
-            }
-        }
         
-        print("\n\n \(#function), \(#line) value: \(sum1)")
-        print("\n\n \(#function), \(#line) value: \(reduced)")
-        
-        if (sum1 % 10 != 0) {
+        if (sum % 10 != 0) {
             throw ValidateSAIDError.unknown
         }else if  (type == 1) {
             return NationaltyType.saudi
@@ -90,3 +73,4 @@ extension String {
         return self[charIndex]
     }
 }
+
