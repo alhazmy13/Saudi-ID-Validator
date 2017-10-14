@@ -1,28 +1,68 @@
 import Foundation
 
-struct ValidateSAID{
-    public func check(idNumber: String) -> Int {
-        let id = idNumber.trimmingCharacters(in: NSCharacterSet.whitespaces)
-        if (Int(id) == nil) {
-            return -1;
+
+public enum NationaltyType {
+    case saudi
+    case nonSaudi
+    case none
+}
+
+public enum ValidateSAIDError : Error {
+    case unknown
+    case lengthIssue
+}
+
+
+public struct ValidateSAID {
+    
+    public static func check(_ id: String) throws -> NationaltyType {
+        
+        let idString = id.trimmingCharacters(in: CharacterSet.whitespaces)
+        
+        if (idString.count != 10) {
+            throw ValidateSAIDError.lengthIssue
         }
-        if (id.characters.count != 10) {
-            return -1;
+        
+        guard let first = idString.first else {
+            throw ValidateSAIDError.unknown
         }
-        let type = Int(String(id.charAt(at: 0)))!
-        if (type != 2 && type != 1) {
-            return -1;
+        
+        let firstStringValue = String(first)
+        guard let type = Int(firstStringValue) else {
+            throw ValidateSAIDError.unknown
         }
-        var sum = 0;
-        for i in 0...9 {
+        
+        if (type != 1 && type != 2) {
+            throw ValidateSAIDError.unknown
+        }
+        
+        if Int(idString) == nil {
+            throw ValidateSAIDError.unknown
+        }
+        
+        
+        let sum = idString.enumerated().reduce(0) { (sum, item) -> Int in
+            let i = item.offset
+            var sumTemp = sum
             if (i % 2 == 0) {
-                let ZFOdd = String(format: "%02d", Int(String(id.charAt(at: i)))! * 2)
-                sum += Int(String(ZFOdd.charAt(at: 0)))! + Int(String(ZFOdd.charAt(at: 1)))!
+                let ZFOdd = String(format: "%02d", Int(String(idString.charAt(at: i)))! * 2)
+                sumTemp += Int(String(ZFOdd.charAt(at: 0)))! + Int(String(ZFOdd.charAt(at: 1)))!
             } else {
-                sum += Int(String(id.charAt(at: i)))!
+                sumTemp += Int(String(idString.charAt(at: i)))!
             }
+            return sumTemp
         }
-        return (sum % 10 != 0) ? -1 : type
+        
+        
+        if (sum % 10 != 0) {
+            throw ValidateSAIDError.unknown
+        }else if  (type == 1) {
+            return NationaltyType.saudi
+        }else if  (type == 2) {
+            return NationaltyType.nonSaudi
+        }else {
+            throw ValidateSAIDError.unknown
+        }
     }
 }
 
@@ -33,3 +73,4 @@ extension String {
         return self[charIndex]
     }
 }
+
