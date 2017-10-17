@@ -32,13 +32,13 @@ func check(id string) int {
 	sum := 0
 
 	//Where the real business comes in
-	// TODO: look like it needs some work on the logic
 	for c := 0; c < 10; c++ {
 		if c % 2 == 0{
-			ZF0dd := string(idarr[c] * 2)
+			ZF0dd := fmt.Sprintf("%02d",idarr[c] * 2)
+			fmt.Println(ZF0dd)
 			// A work around cuz again ain't nobody got time for dat
 			fvalue,_ := strconv.Atoi(ZF0dd[0:1])
-			svalue, _:= strconv.Atoi(ZF0dd[1:1])
+			svalue, _:= strconv.Atoi(ZF0dd[1:2])
 			sum += fvalue + svalue
 
 		}else{
