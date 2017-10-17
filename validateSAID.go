@@ -35,7 +35,7 @@ func check(id string) int {
 	for c := 0; c < 10; c++ {
 		if c % 2 == 0{
 			ZF0dd := fmt.Sprintf("%02d",idarr[c] * 2)
-			fmt.Println(ZF0dd)
+			
 			// A work around cuz again ain't nobody got time for dat
 			fvalue,_ := strconv.Atoi(ZF0dd[0:1])
 			svalue, _:= strconv.Atoi(ZF0dd[1:2])
