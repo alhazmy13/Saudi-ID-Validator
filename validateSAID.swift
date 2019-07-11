@@ -5,11 +5,34 @@ public enum NationaltyType {
     case saudi
     case nonSaudi
     case none
+    
+    var description : String {
+        switch self {
+        // Use Internationalization, as appropriate.
+        case .saudi: return "Valid Number, Saudi Nationality"
+        case .nonSaudi: return "Valid Number, Non-Saudi Nationality"
+        case .none: return "Unknown Nationality"
+        }
+    }
 }
 
-public enum ValidateSAIDError : Error {
+public enum ValidateSAIDError : Error, CustomStringConvertible {
     case unknown
     case lengthIssue
+    case initialNumberError
+    case numbersOnly
+    case nonValidID
+    
+    public var description : String {
+        switch self {
+        // Use Internationalization, as appropriate.
+        case .unknown: return "Unknown Error"
+        case .lengthIssue: return "ID must be 10 digits"
+        case .initialNumberError: return "ID must start with 1 or 2 only"
+        case .numbersOnly: return "Enter only numbers"
+        case .nonValidID: return "ID is not valid"
+        }
+    }
 }
 
 
@@ -19,27 +42,32 @@ public struct ValidateSAID {
         
         let idString = id.trimmingCharacters(in: CharacterSet.whitespaces)
         
+        // check if the given String is castable to Int
+        if Int(idString) == nil {
+            throw ValidateSAIDError.numbersOnly
+        }
+        
+        // check lengh of the ID
         if (idString.count != 10) {
             throw ValidateSAIDError.lengthIssue
         }
         
+        // get first character from ID String
         guard let first = idString.first else {
             throw ValidateSAIDError.unknown
         }
         
+        // convert first charachter to String
         let firstStringValue = String(first)
+        // try to cast firstStringValue to Int
         guard let type = Int(firstStringValue) else {
             throw ValidateSAIDError.unknown
         }
         
+        // if ID number not starting with 1 or 2 throw error
         if (type != 1 && type != 2) {
-            throw ValidateSAIDError.unknown
+            throw ValidateSAIDError.initialNumberError
         }
-        
-        if Int(idString) == nil {
-            throw ValidateSAIDError.unknown
-        }
-        
         
         let sum = idString.enumerated().reduce(0) { (sum, item) -> Int in
             let i = item.offset
@@ -53,24 +81,31 @@ public struct ValidateSAID {
             return sumTemp
         }
         
-        
         if (sum % 10 != 0) {
-            throw ValidateSAIDError.unknown
-        }else if  (type == 1) {
+            throw ValidateSAIDError.nonValidID
+        } else if  (type == 1) {
             return NationaltyType.saudi
-        }else if  (type == 2) {
+        } else if  (type == 2) {
             return NationaltyType.nonSaudi
-        }else {
+        } else {
             throw ValidateSAIDError.unknown
         }
     }
 }
 
 extension String {
-    
     func charAt(at: Int) -> Character {
         let charIndex = self.index(self.startIndex, offsetBy: at)
         return self[charIndex]
     }
 }
 
+// how to use
+do {
+    let resutl = try ValidateSAID.check("ID_NUMBER_HERE")
+    // this will print NationaltyType description
+    print(resutl.description)
+} catch {
+    // this will print error description
+    print(error)
+}
