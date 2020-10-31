@@ -1,12 +1,12 @@
 def check(id):
     id = id.strip()
     if (id.isdigit() is False):
-        return False
+        return -1
     if (len(id) != 10):
-        return False
+        return -1
     type = id[0:1]
     if (type != '2' and type != '1'):
-        return False
+        return -1
     sum = 0
     for i in range(0, 10):
         if (i % 2 == 0):
