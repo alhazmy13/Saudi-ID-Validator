@@ -2,10 +2,7 @@ def check(nid):
     # cast in case input is int
     nid = str(nid).strip()
 
-    if not nid.isdigit():
-        return '-1'
-
-    if len(nid) != 10:
+    if not nid.isdigit() or len(nid) != 10:
         return '-1'
 
     id_type = nid[0]
