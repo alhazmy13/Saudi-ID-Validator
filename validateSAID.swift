@@ -20,7 +20,7 @@ public enum ValidateSAIDError : Error, CustomStringConvertible {
     case unknown
     case lengthIssue
     case initialNumberError
-    case numbersOnly
+    case integersOnly
     case nonValidID
     
     public var description : String {
@@ -29,7 +29,7 @@ public enum ValidateSAIDError : Error, CustomStringConvertible {
         case .unknown: return "Unknown Error"
         case .lengthIssue: return "ID must be 10 digits"
         case .initialNumberError: return "ID must start with 1 or 2 only"
-        case .numbersOnly: return "Enter only numbers"
+        case .integersOnly: return "Enter only integer numbers"
         case .nonValidID: return "ID is not valid"
         }
     }
@@ -39,15 +39,19 @@ public enum ValidateSAIDError : Error, CustomStringConvertible {
 public struct ValidateSAID {
     
     public static func check(_ id: String) throws -> NationaltyType {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "en")
         
-        let idString = id.trimmingCharacters(in: CharacterSet.whitespaces)
-        
-        // check if the given String is castable to Int
-        if Int(idString) == nil {
-            throw ValidateSAIDError.numbersOnly
+        // check if the given String is exactly an Int
+        guard
+            let number = formatter.number(from: id),
+            Int(exactly: number) != nil,
+            let idString = formatter.string(from: number)
+        else {
+            throw ValidateSAIDError.integersOnly
         }
         
-        // check lengh of the ID
+        // check length of the ID
         if (idString.count != 10) {
             throw ValidateSAIDError.lengthIssue
         }
