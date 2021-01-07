@@ -2,9 +2,9 @@
 #   It accepts the NID / Iqama in integer or string.
 #   It also handles input stripping & Arabic digits conversion (١٢٣)
 #   You can use it like:
-#     NationalIdValidator.new('١٢٣٤٥٦٧٨٩٠').valid?
-#     NationalIdValidator.new('1234567890').valid?
-#     NationalIdValidator.new(1234567890).valid?
+#     NationalIdValidator.new('١٢٣٤٥٦٧٨٩٠').call
+#     NationalIdValidator.new('1234567890').call
+#     NationalIdValidator.new(1234567890).call
 # 
 #
 # Responses:
