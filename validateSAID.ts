@@ -1,26 +1,22 @@
-export function validateSAID(id: string) {
-  
-  id = id.trim();
-  if (Number(id) === null) {
-    return -1;
-  }
-  if (id.length !== 10) {
-    return -1;
-  }
-  const type = id.substr(0, 1);
-  if (type !== '2' && type !== '1') {
-    return -1;
-  }
+export function validateSAID(id: string): number {
+  const type = id[0];
+  const _idLength = 10;
+  const _type1 = '1';
+  const _type2 = '2';
   let sum = 0;
-  for (let i = 0; i < 10; i++) {
-    if (i % 2 === 0) {
-      const ZFOdd = String('00' + String(Number(id.substr(i, 1)) * 2)).slice(-2);
-      sum += Number(ZFOdd.substr(0, 1)) + Number(ZFOdd.substr(1, 1));
-    } else {
-      sum += Number(id.substr(i, 1));
-    }
-
+  id = id.trim();
+  if (isNaN(parseInt(id)) || (id.length !== _idLength) || (type !== _type2 && type !== _type1)) {
+    return -1;
   }
-  return (sum % 10 !== 0) ? -1 : type;
-
+  for (let num = 0; num < 10; num++) {
+    const digit = Number(id[num]);
+    if (num % 2 === 0) {
+      const doubled = digit * 2;
+      const ZFOdd = `00${doubled}`.slice(-2);
+      sum += Number(ZFOdd[0]) + Number(ZFOdd[1]);
+    } else {
+      sum += digit;
+    }
+  }
+  return (sum % 10 !== 0) ? -1 : Number(type);
 }
