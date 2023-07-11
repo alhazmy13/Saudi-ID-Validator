@@ -1,21 +1,10 @@
-def check(nid):
-    # cast in case input is int
-    nid = str(nid).strip()
+def check(identifier):
+    if not identifier.isdigit() or len(identifier) != 10 or identifier[0] not in ("1", "2"):
+        return -1
 
-    if not nid.isdigit() or len(nid) != 10:
-        return '-1'
+    checksum = 0
+    for digit, num in enumerate(identifier):
+        num = int(num)
+        checksum += sum(map(int, str(num * 2))) if digit % 2 == 0 else num
 
-    id_type = nid[0]
-
-    if id_type not in ('1', '2'):
-        return '-1'
-
-    total = 0
-    for i in range(0, 10):
-        if i % 2 == 0:
-            multiplied = str(int(nid[i]) * 2)
-            total += sum(map(int, multiplied))
-        else:
-            total += int(nid[i])
-
-    return '-1' if total % 10 != 0 else id_type
+    return identifier[0] if checksum % 10 == 0 else -1
